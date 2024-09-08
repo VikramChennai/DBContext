@@ -33,14 +33,6 @@ async def main():
     print("PostgreSQL Schema:")
     print(schema)
     # Call create_test_tables with the correct parameters
-    await db_context.create_test_tables(
-        host=postgresConfigs["host"],
-        port=postgresConfigs["port"],
-        username=postgresConfigs["username"],
-        password=postgresConfigs["password"],
-        databases=postgresConfigs["databases"][0]["name"],
-        csv_directory='test_data/random_header_test'
-    )
 
 # Run the async main function
 asyncio.run(main())
