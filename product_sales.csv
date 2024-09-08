@@ -1,9 +1,0 @@
-product_id,product_name,quantity_bought,price,category,discount,supplier,sold_date
-101,Laptop,5,850.00,Electronics,10%,TechCorp,2024-08-21
-102,Headphones,15,200.00,Electronics,5%,SoundMart,2024-08-18
-103,Smartphone,8,750.00,Electronics,15%,MobileHub,2024-08-25
-104,Monitor,4,300.00,Electronics,20%,ScreenCo,2024-08-10
-105,Office Chair,12,150.00,Furniture,8%,FurniWorld,2024-08-15
-106,Desk,7,400.00,Furniture,12%,WoodCraft,2024-08-22
-107,Gaming Console,3,600.00,Electronics,18%,GameZone,2024-08-20
-108,Coffee Machine,10,120.00,Appliances,25%,HomeBrew,2024-08-28
