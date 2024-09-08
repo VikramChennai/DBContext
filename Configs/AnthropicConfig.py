@@ -23,6 +23,4 @@ def test_anthropic_setup():
     except Exception as e:
         print(f"Error occurred while testing Anthropic API: {str(e)}")
 
-# Run the test function
-test_anthropic_setup()
-
+# 

@@ -1,4 +1,6 @@
-from Embedding.embeddings import TransformerEmbeddingModel, process_csv_embeddings, compare_embeddings, embed_table_columns, embed_table_descriptions
+import asyncio
+import asyncpg
+from Embedding.embeddings import TransformerEmbeddingModel, evaluate_column_descriptors, process_csv_embeddings, compare_embeddings, embed_table_columns, embed_table_descriptions
 
 model = TransformerEmbeddingModel()
 
@@ -12,5 +14,22 @@ def test_embedding_csv():
     print("TransformerEmbeddingModel test passed")
 
 
+postgresConfigs = {
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "new!Phase1",
+    "databases": [
+        {
+            "name": "test_db",
+        }
+    ]
+}
+
+async def test_embedding_postgres():
+    conn = await asyncpg.connect(user=postgresConfigs["username"], password=postgresConfigs["password"], database=postgresConfigs["databases"][0]["name"], host=postgresConfigs["host"], port=postgresConfigs["port"])
+    columns_to_check = await evaluate_column_descriptors("product_sales", conn, model)
+    print(columns_to_check)
+
 if __name__ == "__main__":
-    test_embedding_csv()
+    asyncio.run(test_embedding_postgres())

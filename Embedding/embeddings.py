@@ -1,6 +1,25 @@
 import torch
 import pandas as pd
 
+#####
+import json
+
+def extract_column_descriptions(json_data):
+    # Initialize the dictionary to store column descriptions
+    column_descriptions = {}
+    
+    # Iterate through each schema in the database
+    for db in json_data:
+        schema = db['schema']
+        for table_name, table_info in schema.items():
+            columns = table_info.get('columns', {})
+            for column_name, column_info in columns.items():
+                description = column_info.get('description', '')
+                column_descriptions[column_name] = description
+    
+    return column_descriptions
+
+
 from abc import ABC, abstractmethod
 import numpy as np
 
@@ -117,8 +136,21 @@ async def embed_table_descriptions(table_name, connection, embedding_model):
     description_embeddings = {column: embedding_model.get_embeddings([desc]) for column, desc in descriptions.items()}
     return description_embeddings
 
+async def embed_table_descriptions_from_json(json_data, embedding_model):
+    """
+    Read a table's column descriptions from a JSON file and create embeddings for them.
+    
+    :param table_name: Name of the table to process
+    :param json_data: JSON data containing the table schema
+    :param embedding_model: An instance of EmbeddingModel to use for creating embeddings
+    :return: Dictionary of column description embeddings
+    """
+    column_descriptions = extract_column_descriptions(json_data)
+    description_embeddings = {column: embedding_model.get_embeddings([desc]) for column, desc in column_descriptions.items()}
+    return description_embeddings
 
-async def evaluate_column_descriptors(table_name, connection, embedding_model):
+
+async def evaluate_column_descriptors(table_name, connection, json_data, embedding_model):
     """
     Evaluate column descriptors by comparing them with the actual data in the columns.
 
@@ -129,7 +161,8 @@ async def evaluate_column_descriptors(table_name, connection, embedding_model):
     """
     # Get column data and descriptions
     column_data = await embed_table_columns(table_name, connection, embedding_model)
-    column_descriptions = await embed_table_descriptions(table_name, connection, embedding_model)
+    # column_descriptions = await embed_table_descriptions(table_name, connection, embedding_model)
+    column_descriptions = await embed_table_descriptions_from_json(json_data, embedding_model)
 
     # Set threshold parameters
     similarity_threshold = 0.3  # Minimum cosine similarity
