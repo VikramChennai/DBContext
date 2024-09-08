@@ -1,7 +1,6 @@
 import torch
 import pandas as pd
 from abc import ABC, abstractmethod
-from sklearn.metrics.pairwise import cosine_similarity
 
 class EmbeddingModel(ABC):
     @abstractmethod
