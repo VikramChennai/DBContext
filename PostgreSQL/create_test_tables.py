@@ -3,66 +3,41 @@ import asyncio
 import os
 import csv
 
-async def connect_to_db(username, password, dbname, host, port):
+async def create_test_tables(username, password, dbname, host, port, csv_directory):
     try:
-        conn = await asyncpg.connect(
-                user=username,
-                password=password,
-                database=dbname,
-                host=host,
-                port=port
-            )
-        print("Connected to the database successfully.")
-        return conn
+        # Connect to the database
+        conn = await asyncpg.connect(user=username, password=password, database=dbname, host=host, port=port)
+
+        # Get all CSV files in the directory
+        csv_files = [f for f in os.listdir(csv_directory) if f.endswith('.csv')]
+
+        for csv_file in csv_files:
+            table_name = os.path.splitext(csv_file)[0]
+            file_path = os.path.join(csv_directory, csv_file)
+
+            # Read CSV file
+            with open(file_path, 'r') as f:
+                reader = csv.reader(f)
+                headers = next(reader)
+                
+                # Create table (drop if exists)
+                columns = ', '.join([f'"{header}" TEXT' for header in headers])
+                await conn.execute(f'DROP TABLE IF EXISTS "{table_name}"')
+                await conn.execute(f'CREATE TABLE "{table_name}" ({columns})')
+
+                # Insert data
+                for row in reader:
+                    placeholders = ','.join(['$' + str(i) for i in range(1, len(row) + 1)])
+                    await conn.execute(f'INSERT INTO "{table_name}" VALUES ({placeholders})', *row)
+
+        print(f"All tables created successfully in database {dbname}")
+
     except Exception as e:
-        print(f"Unable to connect to the database: {e}")
-        return None
+        print(f"An error occurred: {str(e)}")
 
-async def execute_sql_file(conn, file_path):
-    try:
-        with open(file_path, 'r') as file:
-            sql_commands = file.read()
-
-        await conn.execute(sql_commands)
-        print(f"SQL commands from {file_path} executed successfully.")
-    except asyncpg.PostgresError as e:
-        print(f"Error executing SQL commands from {file_path}: {e}")
-    except IOError as e:
-        print(f"Error reading SQL file {file_path}: {e}")
-
-async def create_table_from_csv(conn, csv_file_path):
-    table_name = os.path.splitext(os.path.basename(csv_file_path))[0]
-    
-    with open(csv_file_path, 'r') as csvfile:
-        csv_reader = csv.reader(csvfile)
-        headers = next(csv_reader)
-        
-        # Create a simple table structure
-        columns = [f"{header.lower().replace(' ', '_')} TEXT" for header in headers]
-        create_table_sql = f"""
-        DROP TABLE IF EXISTS {table_name};
-        CREATE TABLE {table_name} (
-            {', '.join(columns)}
-        );
-        """
-        
-        await conn.execute(create_table_sql)
-        print(f"Table {table_name} created successfully.")
-
-async def upload_files_to_postgres(username, password, dbname, host, port, csv_directory):
-    conn = await connect_to_db(username, password, dbname, host, port)
-    if conn:
-        try:
-            for filename in os.listdir(csv_directory):
-                if filename.endswith('.csv'):
-                    file_path = os.path.join(csv_directory, filename)
-                    await create_table_from_csv(conn, file_path)
-        finally:
+    finally:
+        if conn:
             await conn.close()
-            print("Database connection closed.")
-
-def create_test_tables(username, password, dbname, host, port, csv_directory):
-    asyncio.run(upload_files_to_postgres(username, password, dbname, host, port, csv_directory))
 
 # Example usage:
-# create_test_tables('your_username', 'your_password', 'your_database', 'localhost', 5432, 'test_data/random_header_test')
+# asyncio.run(create_test_tables('your_username', 'your_password', 'your_database', 'localhost', 5432, 'test_data/random_header_test'))
