@@ -1,6 +1,8 @@
 import torch
 import pandas as pd
+
 from abc import ABC, abstractmethod
+import numpy as np
 
 class EmbeddingModel(ABC):
     @abstractmethod
@@ -70,3 +72,100 @@ def compare_embedding_files(stored_embeddings_file, descriptor_embeddings_file, 
     stored_embeddings = load_embeddings(stored_embeddings_file)
     descriptor_embeddings = load_embeddings(descriptor_embeddings_file)
     return compare_embeddings(stored_embeddings, descriptor_embeddings)
+
+async def get_table_data(table_name, connection):
+    """
+    Read a table from a database given the table name and asyncpg connection.
+    
+    :param table_name: Name of the table to read
+    :param connection: asyncpg connection object
+    :return: pandas DataFrame containing the table data
+    """
+    query = f"SELECT * FROM {table_name}"
+    records = await connection.fetch(query)
+    return pd.DataFrame(records)
+
+async def embed_table_columns(table_name, connection, embedding_model):
+    """
+    Read a table from a database and create embeddings for its columns.
+    
+    :param table_name: Name of the table to process
+    :param connection: asyncpg connection object
+    :param embedding_model: An instance of EmbeddingModel to use for creating embeddings
+    :return: Dictionary of column embeddings
+    """
+    df = await get_table_data(table_name, connection)
+    column_embeddings = {column: embedding_model.get_embeddings(df[column].astype(str).tolist()) for column in df.columns}
+    return column_embeddings
+
+async def embed_table_descriptions(table_name, connection, embedding_model):
+    """
+    Read a table's column descriptions from a database and create embeddings for them.
+    
+    :param table_name: Name of the table to process
+    :param connection: asyncpg connection object
+    :param embedding_model: An instance of EmbeddingModel to use for creating embeddings
+    :return: Dictionary of column description embeddings
+    """
+    query = f"""
+    SELECT column_name, col_description((table_schema || '.' || table_name)::regclass::oid, ordinal_position) as column_description
+    FROM information_schema.columns
+    WHERE table_name = $1
+    """
+    records = await connection.fetch(query, table_name)
+    descriptions = {record['column_name']: record['column_description'] or '' for record in records}
+    description_embeddings = {column: embedding_model.get_embeddings([desc]) for column, desc in descriptions.items()}
+    return description_embeddings
+
+
+async def evaluate_column_descriptors(table_name, connection, embedding_model):
+    """
+    Evaluate column descriptors by comparing them with the actual data in the columns.
+
+    :param table_name: Name of the table to process
+    :param connection: asyncpg connection object
+    :param embedding_model: An instance of EmbeddingModel to use for creating embeddings
+    :return: Dictionary with evaluation results for each column
+    """
+    # Get column data and descriptions
+    column_data = await embed_table_columns(table_name, connection, embedding_model)
+    column_descriptions = await embed_table_descriptions(table_name, connection, embedding_model)
+
+    # Set threshold parameters
+    similarity_threshold = 0.3  # Minimum cosine similarity
+    percentage_threshold = 0.8  # Minimum percentage of rows that should meet the similarity threshold
+    n_least_similar = 5  # Number of least similar rows to return if threshold is not met
+
+    results = {}
+
+    for column, data_embeddings in column_data.items():
+        if column not in column_descriptions:
+            results[column] = {"error": "No description found"}
+            continue
+
+        desc_embedding = column_descriptions[column]
+        similarities = calculate_similarity(data_embeddings.unsqueeze(0), desc_embedding).squeeze()
+
+        # Calculate the percentage of rows meeting the similarity threshold
+        percentage_above_threshold = (similarities >= similarity_threshold).float().mean().item()
+
+        if percentage_above_threshold >= percentage_threshold:
+            results[column] = {
+                "status": "Good",
+                "percentage_above_threshold": percentage_above_threshold
+            }
+        else:
+            # Get the indices of the n least similar rows
+            least_similar_indices = get_lowest_indices(similarities, n_least_similar).squeeze()
+            
+            # Get the actual data for these rows
+            df = await get_table_data(table_name, connection)
+            least_similar_rows = df.iloc[least_similar_indices.tolist()][column].tolist()
+
+            results[column] = {
+                "status": "Needs improvement",
+                "percentage_above_threshold": percentage_above_threshold,
+                "least_similar_rows": least_similar_rows
+            }
+
+    return results
