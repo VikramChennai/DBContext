@@ -1,4 +1,4 @@
-from PostgreSQL.postgreSQL import get_postgreSQL_schema
+from PostgreSQL.postgreSQL import get_postgreSQL_schema_Better
 from PostgreSQL.create_test_tables import create_test_tables
 
 class DBContext():
@@ -9,8 +9,8 @@ class DBContext():
     def register_postgres_configs(self, configs):
         self.postgresConfigs = configs
 
-    async def get_postgreSQL_schema(self, host: str, port: int, username: str, password: str, databases: list) -> str:
-        self.postgreSQL_schema = await get_postgreSQL_schema(host, port, username, password, databases)
+    async def get_postgreSQL_schema_Better(self, host: str, port: int, username: str, password: str, databases: list) -> str:
+        self.postgreSQL_schema = await get_postgreSQL_schema_Better(host, port, username, password, databases)
         return self.postgreSQL_schema
     
     async def create_test_tables(self, host: str, port: int, username: str, password: str, databases: str, csv_directory: str) -> str:

@@ -1,6 +1,6 @@
 from DBcontext import DBContext
 import asyncio
-
+from CodeExecution.CreateDocker import load_docker as create_docker
 
 postgresConfigs = {
     "host": "localhost",
@@ -20,19 +20,41 @@ db_context = DBContext()
 db_context.register_postgres_configs(postgresConfigs)
 
 async def main():
-    # Get PostgreSQL schema using the DBContext
-    schema = await db_context.get_postgreSQL_schema(
-        host=postgresConfigs["host"],
-        port=postgresConfigs["port"],
-        username=postgresConfigs["username"],
-        password=postgresConfigs["password"],
-        databases=postgresConfigs["databases"]
-    )
+    # Boot a docker container at the start of main
+    container = create_docker()
 
-    # Print the schema (optional, for verification)
-    print("PostgreSQL Schema:")
-    print(schema)
-    # Call create_test_tables with the correct parameters
+    try:
+        # Get PostgreSQL schema using the DBContext
+        schema = await db_context.get_postgreSQL_schema_Better(
+            host=postgresConfigs["host"],
+            port=postgresConfigs["port"],
+            username=postgresConfigs["username"],
+            password=postgresConfigs["password"],
+            databases=postgresConfigs["databases"]
+        )
+
+        # Print the schema (optional, for verification)
+        print("PostgreSQL Schema:")
+        print(schema)
+
+        # Create a Python file that prints "Hello World" in the container
+        container.exec_run("sh -c 'echo \"print(\\\"Hello World\\\")\" > hello_world.py'")
+
+        # Run the Python file
+        result = container.exec_run("python hello_world.py")
+
+        # Get the output
+        output = result.output.decode('utf-8').strip()
+
+        # Validate that "Hello World" was printed
+        assert output == "Hello World", f"Expected 'Hello World', but got '{output}'"
+
+        print("Hello World test passed successfully!")
+
+    finally:
+        # Stop and remove the container
+        container.stop()
+        container.remove()
 
 # Run the async main function
 asyncio.run(main())

@@ -3,7 +3,7 @@ import random
 from Configs.AnthropicConfig import AnthropicClient
 from Configs.AzureOpenAIConfig import asyncAzureOpenAIClient, deployment_name
 
-async def get_postgreSQL_schema(host: str, port: int, username: str, password: str, databases: list) -> list:
+async def get_postgreSQL_schema_Better(host: str, port: int, username: str, password: str, databases: list) -> list:
     updated_databases = []
 
     for db in databases:
