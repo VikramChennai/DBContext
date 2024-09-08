@@ -1,6 +1,7 @@
 from DBcontext import DBContext
 import asyncio
 from CodeExecution.CreateDocker import load_docker as create_docker
+from CodeExecution.ScriptExecution import run_command, write_file, execute_script, create_and_execute_file
 
 postgresConfigs = {
     "host": "localhost",
@@ -36,6 +37,9 @@ async def main():
         # Print the schema (optional, for verification)
         print("PostgreSQL Schema:")
         print(schema)
+
+
+
 
         # Create a Python file that prints "Hello World" in the container
         container.exec_run("sh -c 'echo \"print(\\\"Hello World\\\")\" > hello_world.py'")
