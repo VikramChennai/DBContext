@@ -1,0 +1,51 @@
+id,prod_name,qty_purchase,unit_price,prod_category,disc_percent,vendor,purchase_date
+501,Smart TV,3,1200.00,Electronics,12,ScreenMasters,2024-09-05
+502,Dining Set,2,800.00,Furniture,8,HomeStyle,2024-09-08
+503,Espresso Machine,7,350.00,Appliances,15,CafePro,2024-09-11
+504,Bluetooth Earphones,25,80.00,Electronics,20,AudioTech,2024-09-14
+505,Recliner,4,500.00,Furniture,10,ComfortZone,2024-09-17
+506,Air Conditioner,3,600.00,Appliances,5,CoolAir,2024-09-20
+507,Fitness Tracker,30,100.00,Electronics,18,FitGear,2024-09-23
+508,Bookcase,5,250.00,Furniture,12,BookHaven,2024-09-26
+509,Pressure Cooker,12,120.00,Appliances,22,QuickMeal,2024-09-29
+510,Gaming Laptop,2,1500.00,Electronics,8,GameTech,2024-10-02
+511,Sectional Sofa,1,2000.00,Furniture,15,LoungeLife,2024-10-05
+512,Robot Vacuum,8,300.00,Appliances,25,CleanBot,2024-10-08
+513,Wireless Keyboard,20,70.00,Electronics,10,TypePro,2024-10-11
+514,Accent Chair,6,180.00,Furniture,7,StyleSeats,2024-10-14
+515,Blender,15,90.00,Appliances,20,SmoothMix,2024-10-17
+516,Portable Charger,40,35.00,Electronics,30,PowerUp,2024-10-20
+517,Coffee Table,3,220.00,Furniture,12,LivingSpace,2024-10-23
+518,Toaster Oven,10,80.00,Appliances,15,QuickBake,2024-10-26
+519,Wireless Mouse,35,40.00,Electronics,25,ClickMaster,2024-10-29
+520,Dresser,2,400.00,Furniture,8,StorageStyle,2024-11-01
+521,Food Processor,9,150.00,Appliances,18,ChopMaster,2024-11-04
+522,E-reader,18,130.00,Electronics,12,BookTech,2024-11-07
+523,Patio Set,1,1000.00,Furniture,10,OutdoorLiving,2024-11-10
+524,Stand Mixer,5,250.00,Appliances,15,BakePro,2024-11-13
+525,Smart Watch,22,180.00,Electronics,20,WristTech,2024-11-16
+526,Wardrobe,2,600.00,Furniture,7,ClothesKeeper,2024-11-19
+527,Dishwasher,3,700.00,Appliances,10,CleanDish,2024-11-22
+528,Noise-Canceling Headphones,12,220.00,Electronics,15,SoundSilence,2024-11-25
+529,Bed Frame,4,300.00,Furniture,12,SleepWell,2024-11-28
+530,Air Fryer,20,100.00,Appliances,25,HealthyCook,2024-12-01
+531,Tablet,15,350.00,Electronics,18,TouchScreen,2024-12-04
+532,Ottoman,8,120.00,Furniture,15,FootRest,2024-12-07
+533,Electric Kettle,25,50.00,Appliances,20,QuickBoil,2024-12-10
+534,Portable Speaker,30,80.00,Electronics,22,SoundMove,2024-12-13
+535,Desk Lamp,18,60.00,Furniture,10,BrightWork,2024-12-16
+536,Slow Cooker,7,70.00,Appliances,15,EasyMeal,2024-12-19
+537,Webcam,40,50.00,Electronics,25,VideoChat,2024-12-22
+538,Bar Stools,6,150.00,Furniture,8,KitchenPerch,2024-12-25
+539,Waffle Maker,12,40.00,Appliances,30,BreakfastPro,2024-12-28
+540,External Hard Drive,25,100.00,Electronics,12,DataStore,2024-12-31
+541,Wall Shelves,10,80.00,Furniture,18,WallOrganize,2025-01-03
+542,Hand Mixer,15,35.00,Appliances,20,MixMaster,2025-01-06
+543,Wireless Router,8,120.00,Electronics,10,NetSpeed,2025-01-09
+544,Accent Rug,5,200.00,Furniture,15,FloorStyle,2025-01-12
+545,Rice Cooker,20,60.00,Appliances,25,PerfectGrain,2025-01-15
+546,Dash Cam,12,90.00,Electronics,15,RoadRecord,2025-01-18
+547,Coat Rack,7,70.00,Furniture,10,EntryOrganizer,2025-01-21
+548,Juicer,10,110.00,Appliances,18,FreshSqueeze,2025-01-24
+549,Portable Monitor,6,200.00,Electronics,12,ScreenToGo,2025-01-27
+550,Bean Bag Chair,4,100.00,Furniture,20,CasualComfort,2025-01-30
