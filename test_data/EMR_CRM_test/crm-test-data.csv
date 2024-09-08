@@ -1,0 +1,11 @@
+customer_id,first_name,last_name,birth_date,gender,phone_number,email_address,last_appointment,appointment_category,primary_provider,health_condition,service_provided,current_medications,health_plan,last_payment,last_interaction,preferred_contact,newsletter_subscription
+1001,John,Doe,1980-05-15,Male,555-0101,john.doe@email.com,2024-09-10,Wellness Check,Dr. S. Smith,General Exam,Annual Physical,None,BlueCross Health,25.00,2024-08-15,Phone,Yes
+1002,Jane,Smith,1992-11-22,Female,555-0102,jane.smith@email.com,2024-09-12,Chronic Care,Dr. M. Johnson,Diabetes Type 2,Follow-up Consultation,Metformin,Aetna Complete,35.00,2024-08-20,Email,No
+1003,Robert,Brown,1975-03-30,Male,555-0103,robert.brown@email.com,2024-09-15,Specialty Care,Dr. E. Chen,Hypertension,Initial Consultation,Lisinopril,UnitedHealth Choice,40.00,2024-08-25,SMS,Yes
+1004,Emily,Wilson,1988-07-18,Female,555-0104,emily.wilson@email.com,2024-09-18,Maternity,Dr. L. Taylor,Pregnancy,Prenatal Check,Prenatal Vitamins,Cigna Maternal Health,30.00,2024-08-30,Email,Yes
+1005,Michael,Lee,1965-12-05,Male,555-0105,michael.lee@email.com,2024-09-20,Rehabilitation,Dr. D. Park,Back Pain,Physical Therapy Session,None,Medicare Advantage,20.00,2024-09-01,Phone,No
+1006,Sarah,Johnson,1990-09-25,Female,555-0106,sarah.johnson@email.com,2024-09-22,Dental Care,Dr. J. White,Routine Checkup,Dental Examination,None,Delta Dental Premier,15.00,2024-09-05,SMS,Yes
+1007,David,Garcia,1978-02-14,Male,555-0107,david.garcia@email.com,2024-09-25,Allergy & Immunology,Dr. R. Brown,Seasonal Allergies,Allergy Testing,Cetirizine,Humana Gold Plus,45.00,2024-09-08,Email,No
+1008,Lisa,Martinez,1983-06-20,Female,555-0108,lisa.martinez@email.com,2024-09-28,Women's Health,Dr. N. Lee,Breast Cancer Screening,Mammography,None,Anthem Blue Preferred,50.00,2024-09-10,Phone,Yes
+1009,James,Taylor,1970-10-08,Male,555-0109,james.taylor@email.com,2024-10-01,Cardiology,Dr. W. Chen,Heart Disease,Cardiac Evaluation,Atorvastatin,Kaiser Permanente,60.00,2024-09-12,SMS,No
+1010,Jennifer,Anderson,1995-04-12,Female,555-0110,jennifer.anderson@email.com,2024-10-03,Mental Health,Dr. E. Brown,Anxiety Disorder,Psychiatric Assessment,Sertraline,Optum Behavioral Health,55.00,2024-09-15,Email,Yes

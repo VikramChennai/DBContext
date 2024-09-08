@@ -1,0 +1,11 @@
+patient_id,patient_first_name,patient_last_name,date_of_birth,sex,contact_phone,contact_email,visit_date,visit_type,attending_physician,diagnosis_icd10,procedure_cpt,prescribed_medication,insurance_carrier,visit_copay
+1001,John,Doe,1980-05-15,M,555-0101,john.doe@email.com,2024-09-10,Annual Physical,Dr. Sarah Smith,Z00.00,99395,None,BlueCross,25.00
+1002,Jane,Smith,1992-11-22,F,555-0102,jane.smith@email.com,2024-09-12,Follow-up,Dr. Michael Johnson,E11.9,99213,Metformin,Aetna,35.00
+1003,Robert,Brown,1975-03-30,M,555-0103,robert.brown@email.com,2024-09-15,Specialist Consult,Dr. Emily Chen,I10,99204,Lisinopril,UnitedHealth,40.00
+1004,Emily,Wilson,1988-07-18,F,555-0104,emily.wilson@email.com,2024-09-18,Prenatal Checkup,Dr. Lisa Taylor,Z34.00,99214,Prenatal Vitamins,Cigna,30.00
+1005,Michael,Lee,1965-12-05,M,555-0105,michael.lee@email.com,2024-09-20,Physical Therapy,Dr. David Park,M54.5,97110,None,Medicare,20.00
+1006,Sarah,Johnson,1990-09-25,F,555-0106,sarah.johnson@email.com,2024-09-22,Dental Exam,Dr. Jessica White,Z01.20,D0120,None,Delta Dental,15.00
+1007,David,Garcia,1978-02-14,M,555-0107,david.garcia@email.com,2024-09-25,Allergy Test,Dr. Robert Brown,J30.1,95004,Cetirizine,Humana,45.00
+1008,Lisa,Martinez,1983-06-20,F,555-0108,lisa.martinez@email.com,2024-09-28,Mammogram,Dr. Nancy Lee,Z12.31,77067,None,Anthem,50.00
+1009,James,Taylor,1970-10-08,M,555-0109,james.taylor@email.com,2024-10-01,Cardiology Consult,Dr. William Chen,I25.10,99205,Atorvastatin,Kaiser,60.00
+1010,Jennifer,Anderson,1995-04-12,F,555-0110,jennifer.anderson@email.com,2024-10-03,Psychiatric Eval,Dr. Elizabeth Brown,F41.1,90792,Sertraline,Optum,55.00
