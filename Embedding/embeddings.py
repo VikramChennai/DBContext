@@ -1,6 +1,7 @@
 import torch
 import pandas as pd
 from abc import ABC, abstractmethod
+from sklearn.metrics.pairwise import cosine_similarity
 
 class EmbeddingModel(ABC):
     @abstractmethod
@@ -30,21 +31,43 @@ class OpenAIEmbeddingModel(EmbeddingModel):
         return torch.tensor([item['embedding'] for item in response['data']])
 
 def process_csv_embeddings(csv_filename, embedding_model):
-    df = pd.read_csv(csv_filename)
-    header_embedding = embedding_model.get_embeddings([' '.join(df.columns)])[0]
+    df = pd.read_csv(csv_filename, header=0)
     column_embeddings = {column: embedding_model.get_embeddings(df[column].astype(str).tolist()) for column in df.columns}
+    return column_embeddings
 
-    output_filename = f"{csv_filename.split('.')[0]}_embeddings.pt"
-    torch.save({
-        'header_embedding': header_embedding,
-        'column_embeddings': column_embeddings
-    }, output_filename)
-    print(f"Embeddings saved to '{output_filename}'")
-    return header_embedding, column_embeddings
 
-# Example usage
-transformer_model = TransformerEmbeddingModel()
-header_emb, col_embs = process_csv_embeddings('test_file.csv', transformer_model)
+def load_embeddings(file_path):
+    return torch.load(file_path)
 
-# openai_model = OpenAIEmbeddingModel()
-# header_emb, col_embs = process_csv_embeddings('test_file.csv', openai_model)
+def calculate_similarity(col_embeddings, desc_embeddings):
+    column_similarities = {}
+    for column, col_embedding in col_embeddings.items():
+        desc_embedding = desc_embeddings[column]
+        # Reshape desc_embedding to (1, 384) for broadcasting
+        desc_embedding = desc_embedding.view(1, -1)
+        # Normalize the embeddings
+        col_embedding_normalized = col_embedding / col_embedding.norm(dim=1, keepdim=True)
+        desc_embedding_normalized = desc_embedding / desc_embedding.norm()
+        # Calculate cosine similarity for this column
+        similarity = torch.mm(col_embedding_normalized, desc_embedding_normalized.t())
+        column_similarities[column] = similarity.squeeze()
+
+    # Stack the column similarities
+    return torch.stack(list(column_similarities.values())).squeeze()
+
+
+def get_lowest_indices(similarities, top_n=5):
+    return similarities.argsort(dim=0)[:top_n].T
+
+def compare_embeddings(embeddings1, embeddings2, top_n=5):
+    # Calculate cosine similarity
+    similarities = calculate_similarity(embeddings1, embeddings2)
+    # Get the indices of the lowest similarity scores
+    lowest_sim_indices = get_lowest_indices(similarities, top_n)
+    return lowest_sim_indices, similarities
+
+def compare_embedding_files(stored_embeddings_file, descriptor_embeddings_file, top_n=5):
+    # Load the column embeddings and the descriptor embeddings
+    stored_embeddings = load_embeddings(stored_embeddings_file)
+    descriptor_embeddings = load_embeddings(descriptor_embeddings_file)
+    return compare_embeddings(stored_embeddings, descriptor_embeddings)
