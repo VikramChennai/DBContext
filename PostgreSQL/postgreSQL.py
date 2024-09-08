@@ -1,9 +1,7 @@
 import asyncpg
-
+import random
 from Configs.AnthropicConfig import AnthropicClient
-
-
-
+from Configs.AzureOpenAIConfig import asyncAzureOpenAIClient, deployment_name
 
 async def get_postgreSQL_schema(host: str, port: int, username: str, password: str, databases: list) -> list:
     updated_databases = []
@@ -50,18 +48,38 @@ async def get_postgreSQL_schema(host: str, port: int, username: str, password: s
                     for col in columns
                 }
 
-                # Print out the columns and their values
-                print(f"Columns and values for table {table_name}:")
+                # Print out the table name
+                print(f"\nTable: {table_name}")
+                print("=" * (len(table_name) + 7))
+
+                # Print column headers
+                print(f"{'Column Name':<20} {'Data Type':<15} {'Nullable':<10} {'Description':<50}")
+                print("-" * 95)
+
                 for col in columns:
                     column_name = col['column_name']
                     values_query = f"""
                     SELECT "{column_name}" FROM "{table_name}"
                     """
                     values = await connection.fetch(values_query)
-                    print(f"  {column_name}: {col['data_type']} (Nullable: {col['is_nullable']})")
-                    print("    Values:")
-                    for value in values:
-                        print(f"      {value[column_name]}")
+                    sample_values = random.sample(values, min(10, len(values)))
+
+                    # Generate column description using Azure OpenAI
+                    prompt = f"Describe the column '{column_name}' in the table '{table_name}' based on these sample values: {[v[column_name] for v in sample_values]}. Consider the column name, data type, and nullability. Also make sure to make your description as concise as possible. You are penalized for long rambling descriptions"
+                    
+                    response = await asyncAzureOpenAIClient.chat.completions.create(
+                        model=deployment_name,
+                        messages=[
+                            {"role": "system", "content": "You are a helpful assistant that describes database columns based on their name, data type, and sample values."},
+                            {"role": "user", "content": prompt}
+                        ]
+                    )
+                    
+                    column_description = response.choices[0].message.content.strip()
+                    schema[table_name]['columns'][column_name]['description'] = column_description
+
+                    # Print column information
+                    print(f"{column_name:<20} {col['data_type']:<15} {col['is_nullable']:<10} {column_description[:50]:<50}")
 
                 # Query to get primary keys for the table
                 primary_keys_query = f"""
@@ -77,7 +95,6 @@ async def get_postgreSQL_schema(host: str, port: int, username: str, password: s
 
             await connection.close()
         except Exception as e:
-            #(f"Connection to {dbname} failed: {str(e)}")
             schema = {"error": str(e)}
 
         updated_db = db.copy()

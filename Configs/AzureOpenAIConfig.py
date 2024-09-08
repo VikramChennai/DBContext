@@ -23,27 +23,4 @@ asyncAzureOpenAIClient = AsyncAzureOpenAI(
     azure_endpoint=azure_endpoint
 )
 
-import asyncio
-
-# Test the Azure OpenAI setup with a simple async call
-async def test_azure_openai_setup():
-    try:
-        # Create a simple completion request using the async client
-        response = await asyncAzureOpenAIClient.chat.completions.create(
-            model=deployment_name,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Hello, can you hear me?"}
-            ]
-        )
-        
-        # Print the response
-        print("Azure OpenAI API async test response:")
-        print(response.choices[0].message.content)
-        print("\nAsync API call successful!")
-    except Exception as e:
-        print(f"Error occurred while testing async Azure OpenAI API: {str(e)}")
-
-# Run the async test function
-asyncio.run(test_azure_openai_setup())
 
