@@ -1,5 +1,10 @@
 import asyncpg
 
+from Configs.AnthropicConfig import AnthropicClient
+
+
+
+
 async def get_postgreSQL_schema(host: str, port: int, username: str, password: str, databases: list) -> list:
     updated_databases = []
 
@@ -44,6 +49,19 @@ async def get_postgreSQL_schema(host: str, port: int, username: str, password: s
                     }
                     for col in columns
                 }
+
+                # Print out the columns and their values
+                print(f"Columns and values for table {table_name}:")
+                for col in columns:
+                    column_name = col['column_name']
+                    values_query = f"""
+                    SELECT "{column_name}" FROM "{table_name}"
+                    """
+                    values = await connection.fetch(values_query)
+                    print(f"  {column_name}: {col['data_type']} (Nullable: {col['is_nullable']})")
+                    print("    Values:")
+                    for value in values:
+                        print(f"      {value[column_name]}")
 
                 # Query to get primary keys for the table
                 primary_keys_query = f"""

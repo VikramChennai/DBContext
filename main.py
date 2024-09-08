@@ -6,7 +6,7 @@ postgresConfigs = {
     "host": "localhost",
     "port": 5432,
     "username": "postgres",
-    "password": "postgres",
+    "password": "new!Phase1",
     "databases": [
         {
             "name": "test_db",
