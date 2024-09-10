@@ -15,10 +15,10 @@ postgresConfigs = {
     "host": "localhost",
     "port": 5432,
     "username": "postgres",
-    "password": "new!Phase1",
+    "password": "password",
     "databases": [
         {
-            "name": "test_db",
+            "name": "yourDB",
         }
     ]
 }
